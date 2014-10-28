@@ -56,6 +56,8 @@ public final class Music implements JMC{
 				n = new Note(key + 6, CROTCHET);
 			else if (name.charAt(i) == 'h') 
 				n = new Note(key + 7, CROTCHET);
+			else 
+				n = new Note(key, CROTCHET);
 			
 			melody.addNote(n);	
 		}
