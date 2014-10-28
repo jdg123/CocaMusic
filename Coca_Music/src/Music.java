@@ -19,7 +19,7 @@ public final class Music implements JMC{
 		Part p = new Part("Flute", BELLS, 0);
 		Phrase phr = new Phrase("Chromatic Scale", 0.0);
 		for(int i=0;i<12;i++){
-			Note n = new Note(C4+i, CROTCHET);
+			Note n = new Note(C4+i, THIRTYSECOND_NOTE);
 			phr.addNote(n);
 		}
 		
