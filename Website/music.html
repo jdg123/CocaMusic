@@ -46,7 +46,9 @@ var Synth = new AudioSynth;
 //	Synth.play(sound, note, octave, duration);
 
 	var piano = Synth.createInstrument('piano');
-piano.play('C', 4, 2); // plays C4 for 2s using the 'piano' sound profile
+	piano.generate('C', 4, 2); // plays C4 for 2s using the 'piano' sound profile
+	
+
 var acoustic = Synth.createInstrument('acoustic'); // play with your acoustic guitar!
 
 Synth.setSampleRate(20000); // sets sample rate to 20000Hz
@@ -56,6 +58,10 @@ Synth.setVolume(1.00); // set volume to 100%
 
 Synth.getVolume(); // returns 0.1337
 });
+
+function GenerateMelody (String name){
+	for 
+}
 
 </script>
 
