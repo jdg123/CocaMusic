@@ -1,0 +1,66 @@
+<!doctype html”>
+<html lang=”en”>  
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="audiosynth.js"> </script>
+
+ <style>
+#NavigationBar{ 
+width: 100%;
+table-layout: fixed;
+border:3px solid #98bf21;
+background-color:#A7C942;
+padding-top:2px;
+padding-bottom:2px;
+text-align: center;
+}
+</style>
+	
+</head>
+
+<div class = "center">
+<h1> Welcome to CocaMusic	</h1>	
+</div>
+
+<body>
+<table id = "NavigationBar">
+<tr>
+	<td> <a href="assign4form.html">Account Information (Form)</a> </td>
+	<td> <a href="SuperBowlPics.html">Last Year's Superbowl</a> </td>
+	<td> <a href="Bio.html">NFL Bio</a> </td>
+</tr>
+</table>
+
+</body>
+</html>
+
+
+
+<script> 
+
+$(document).ready( function() {
+
+var Synth = new AudioSynth;
+
+//	Synth.generate(sound, note, octave, duration);
+//	Synth.play(sound, note, octave, duration);
+
+	var piano = Synth.createInstrument('piano');
+piano.play('C', 4, 2); // plays C4 for 2s using the 'piano' sound profile
+var acoustic = Synth.createInstrument('acoustic'); // play with your acoustic guitar!
+
+Synth.setSampleRate(20000); // sets sample rate to 20000Hz
+
+Synth.getSampleRate(); // returns 20000
+Synth.setVolume(1.00); // set volume to 100%
+
+Synth.getVolume(); // returns 0.1337
+});
+
+</script>
+
+
+
+
+
+
