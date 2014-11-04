@@ -2,7 +2,7 @@
 <html lang=”en”>  
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="audiosynth.js"> </script>
+ <script src="../../src/audiolet/Audiolet.js"></script>
 
  <style>
 #NavigationBar{ 
@@ -38,30 +38,28 @@ text-align: center;
 
 <script> 
 
-$(document).ready( function() {
+var AudioletApp = function() {
+        this.audiolet = new Audiolet();
 
-var Synth = new AudioSynth;
+        this.audiolet.scheduler.addAbsolute(0, function() {
+            var synth = new Synth(this.audiolet, 262);
+            synth.connect(this.audiolet.output);
+        }.bind(this));
 
-//	Synth.generate(sound, note, octave, duration);
-//	Synth.play(sound, note, octave, duration);
+        this.audiolet.scheduler.addAbsolute(1, function() {
+            var synth = new Synth(this.audiolet, 262);
+            synth.connect(this.audiolet.output);
+        }.bind(this));
 
-	var piano = Synth.createInstrument('piano');
-	piano.generate('C', 4, 2); // plays C4 for 2s using the 'piano' sound profile
-	
+        this.audiolet.scheduler.addAbsolute(2, function() {
+            var synth = new Synth(this.audiolet, 392);
+            synth.connect(this.audiolet.output);
+        }.bind(this));
 
-var acoustic = Synth.createInstrument('acoustic'); // play with your acoustic guitar!
-
-Synth.setSampleRate(20000); // sets sample rate to 20000Hz
-
-Synth.getSampleRate(); // returns 20000
-Synth.setVolume(1.00); // set volume to 100%
-
-Synth.getVolume(); // returns 0.1337
-});
-
-function GenerateMelody (String name){
-	for 
-}
+        this.audiolet.scheduler.addAbsolute(3, function() {
+            var synth = new Synth(this.audiolet, 392);
+            synth.connect(this.audiolet.output);
+        }.bind(this));
 
 </script>
 
