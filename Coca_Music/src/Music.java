@@ -8,26 +8,21 @@ import jm.util.*;
 public final class Music implements JMC {
 
 	public static void main(String[] args) {
-		generateSong();
+		int height = 61; // height in inches
+		String mood = "Embarrassed";
+		String name = "Emily Liu";
+		generateSong(height, mood, name);
 	}
 
-	public static void generateSong() {
-		int height = 61; // height in inches
+	public static void generateSong(int height, String mood, String name) {
+		
 
 		Score s = new Score("JMDemo1 - Scale");
 		Part p = new Part("Flute", PIANO, 0);
 
-		Read.midi(s, "Embarrassed.mid");
+		Read.midi(s, mood + ".mid");
 		int key = generateKey(height);
-		Phrase melody = generateMelody("Josh Greenberger", key);
-
-		// Phrase phr = new Phrase("Chromatic Scale", 0.0);
-		// for(int i=0;i<12;i++){
-		// Note n = new Note(C4+i, THIRTYSECOND_NOTE);
-		// phr.addNote(n);
-		// }
-		// p.addPhrase(phr);
-
+		Phrase melody = generateMelody(name, key);
 		p.addPhrase(melody);
 		s.addPart(p);
 		Play.midi(s);
