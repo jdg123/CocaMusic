@@ -1,5 +1,3 @@
-import java.io.File;
-
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
 
@@ -10,15 +8,18 @@ import jm.util.*;
 public final class Music implements JMC {
 
 	public static void main(String[] args) {
+		generateSong();
+	}
 
+	public static void generateSong() {
 		int height = 61; // height in inches
 
 		Score s = new Score("JMDemo1 - Scale");
 		Part p = new Part("Flute", PIANO, 0);
 
-		//Read.midi(s, "Embarrassed.mid");
+		Read.midi(s, "Embarrassed.mid");
 		int key = generateKey(height);
-		Phrase melody = generateMelody("Emily Liu", key);
+		Phrase melody = generateMelody("Josh Greenberger", key);
 
 		// Phrase phr = new Phrase("Chromatic Scale", 0.0);
 		// for(int i=0;i<12;i++){
@@ -26,7 +27,7 @@ public final class Music implements JMC {
 		// phr.addNote(n);
 		// }
 		// p.addPhrase(phr);
-		
+
 		p.addPhrase(melody);
 		s.addPart(p);
 		Play.midi(s);
@@ -63,130 +64,140 @@ public final class Music implements JMC {
 
 	public static Phrase generateMelody(String name, int key) {
 		Phrase melody = new Phrase("Melody", 0.0);
-		float phrase_length = 0, max_length = 16;
+
+		// COUNT IN
+//		 for (int i = 0; i < 4; i++){
+//		 Note n = new Note(C4, QUARTER_NOTE);
+//		 melody.addNote(n);
+//		 }
+
+		double phrase_length = 0, max_length = 8, note_length;
 		Note n = null;
 		name = name.toLowerCase();
 		// Iterate through letters in name
-		for (int x = 0; x < 4; x++) {
-		for (int i = 0; i < name.length(); i++) {
-				if (max_length - phrase_length > 2.0) {
-					// Note on first beat
-					switch (name.charAt(i)) {
-					case 'a':
-						n = new Note(key, 1.0);
-						phrase_length += 1;
-						break;
-					case 'b':
-						n = new Note(key + 2, 1.0);
-						phrase_length += 1;
-						break;
-					case 'c':
-						n = new Note(key + 4, 1.0);
-						phrase_length += 1;
-						break;
-					case 'd':
-						n = new Note(key + 7, 1.0);
-						phrase_length += 1;
-						break;
-					case 'e':
-						n = new Note(key + 9, 1.0);
-						phrase_length += 1;
-						break;
-					case 'f':
-						n = new Note(key, 0.5);
-						phrase_length += 0.5;
-						break;
-					case 'g':
-						n = new Note(key + 2, 0.5);
-						phrase_length += 0.5;
-						break;
-					case 'h':
-						n = new Note(key + 4, 0.5);
-						phrase_length += 0.5;
-						break;
-					case 'i':
-						n = new Note(key + 7, 0.5);
-						phrase_length += 0.5;
-						break;
-					case 'j':
-						n = new Note(key + 9, 0.5);
-						phrase_length += 0.5;
-						break;
-					case 'k':
-						n = new Note(key, 0.25);
-						phrase_length += 0.25;
-						break;
-					case 'l':
-						n = new Note(key + 2, 0.25);
-						phrase_length += 0.25;
-						break;
-					case 'm':
-						n = new Note(key + 4, 0.25);
-						phrase_length += 0.25;
-						break;
-					case 'n':
-						n = new Note(key + 7, 0.25);
-						phrase_length += 0.25;
-						break;
-					case 'o':
-						n = new Note(key + 9, 0.25);
-						phrase_length += 0.25;
-						break;
-					case 'p':
-						n = new Note(key, 2.0);
-						phrase_length += 2;
-						break;
-					case 'q':
-						n = new Note(key + 2, 2.0);
-						phrase_length += 2;
-						break;
-					case 'r':
-						n = new Note(key + 4, 2.0);
-						phrase_length += 2;
-						break;
-					case 's':
-						n = new Note(key + 7, 2.0);
-						phrase_length += 2;
-						break;
-					case 't':
-						n = new Note(key + 9, 2.0);
-						phrase_length += 2;
-						break;
-					case 'u':
-						n = new Note(key, 1.5);
-						phrase_length += 1.5;
-						break;
-					case 'v':
-						n = new Note(key + 2,  1.5);
-						phrase_length += 1.5;
-						break;
-					case 'w':
-						n = new Note(key + 4,  1.5);
-						phrase_length += 1.5;
-						break;
-					case 'x':
-						n = new Note(key + 7,  1.5);
-						phrase_length += 1.5;
-						break;
-					case 'y':
-						n = new Note(key + 9,  1.5);
-						phrase_length += 1.5;
-						break;
-					default:
-						n = new Note(key,  1.5);
-						phrase_length += 1.5;
-					}
-					melody.addNote(n);
-					System.out.println(phrase_length);
+		for (int x = 0; x < 8; x++) {
+			for (int i = 0; i < name.length(); i++) {
+				switch (name.charAt(i)) {
+				case 'a':
+					n = new Note(key, 1.0);
+					note_length = 1;
+					break;
+				case 'b':
+					n = new Note(key + 2, 1.0);
+					note_length = 1;
+					break;
+				case 'c':
+					n = new Note(key + 4, 1.0);
+					note_length = 1;
+					break;
+				case 'd':
+					n = new Note(key + 7, 1.0);
+					note_length = 1;
+					break;
+				case 'e':
+					n = new Note(key + 9, 1.0);
+					note_length = 1;
+					break;
+				case 'f':
+					n = new Note(key, 0.5);
+					note_length = 0.5;
+					break;
+				case 'g':
+					n = new Note(key + 2, 0.5);
+					note_length = 0.5;
+					break;
+				case 'h':
+					n = new Note(key + 4, 0.5);
+					note_length = 0.5;
+					break;
+				case 'i':
+					n = new Note(key + 7, 0.5);
+					note_length = 0.5;
+					break;
+				case 'j':
+					n = new Note(key + 9, 0.5);
+					note_length = 0.5;
+					break;
+				case 'k':
+					n = new Note(key, 0.25);
+					note_length = 0.25;
+					break;
+				case 'l':
+					n = new Note(key + 2, 0.25);
+					note_length = 0.25;
+					break;
+				case 'm':
+					n = new Note(key + 4, 0.25);
+					note_length = 0.25;
+					break;
+				case 'n':
+					n = new Note(key + 7, 0.25);
+					note_length = 0.25;
+					break;
+				case 'o':
+					n = new Note(key + 9, 0.25);
+					note_length = 0.25;
+					break;
+				case 'p':
+					n = new Note(key, 2.0);
+					note_length = 2;
+					break;
+				case 'q':
+					n = new Note(key + 2, 2.0);
+					note_length = 2;
+					break;
+				case 'r':
+					n = new Note(key + 4, 2.0);
+					note_length = 2;
+					break;
+				case 's':
+					n = new Note(key + 7, 2.0);
+					note_length = 2;
+					break;
+				case 't':
+					n = new Note(key + 9, 2.0);
+					note_length = 2;
+					break;
+				case 'u':
+					n = new Note(key, 1.5);
+					note_length = 1.5;
+					break;
+				case 'v':
+					n = new Note(key + 2, 1.5);
+					note_length = 1.5;
+					break;
+				case 'w':
+					n = new Note(key + 4, 1.5);
+					note_length = 1.5;
+					break;
+				case 'x':
+					n = new Note(key + 7, 1.5);
+					note_length = 1.5;
+					break;
+				case 'y':
+					n = new Note(key + 9, 1.5);
+					note_length = 1.5;
+					break;
+				default:
+					n = new Note(key, 1.5);
+					note_length = 1.5;
 				}
+				if (note_length + phrase_length < max_length) {
+					phrase_length += note_length;
+					melody.addNote(n);
+					System.out.println("Char = " + name.charAt(i));
+					System.out.println(phrase_length);
+				} 
 				else {
-					n = new Note(key, max_length - phrase_length + 1);
-					System.out.println("At length " + (max_length - phrase_length + 1));
+					n = new Note(key, max_length - phrase_length);
+					System.out.println("At length "
+							+ (max_length - phrase_length));
 					phrase_length = 0;
 					melody.addNote(n);
+					i = name.length();
 				}
 			}
-			}		
+		}
 		return melody;
 	}
 }
