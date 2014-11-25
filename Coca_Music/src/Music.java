@@ -3,28 +3,70 @@ import javax.sound.midi.Sequencer;
 
 import jm.JMC;
 import jm.music.data.*;
+import jm.audio.synth.*;
 import jm.util.*;
 
 public final class Music implements JMC {
 
-	public static void main(String[] args) {
-		int height = 61; // height in inches
-		String mood = "Embarrassed";
-		String name = "Emily Liu";
-		generateSong(height, mood, name);
+	static class Input {
+		int height;
+		String mood;
+		String name;
+		
+		Input(){
+			
+		}
+	}
+	public static void main(String[] args) {	
+		Input input = pullDatabase();
+		generateSong(input.height, input.mood, input.name);
 	}
 
+	public static Input pullDatabase() {
+		Input input = new Input();				
+		input.height = 61; // height in inches
+		input.mood = "LovestruckNoLead";
+		input.name = "Josh Greenberger";
+		return input;
+	}
+	
 	public static void generateSong(int height, String mood, String name) {
-		
 
 		Score s = new Score("JMDemo1 - Scale");
-		Part p = new Part("Flute", PIANO, 0);
-
-		Read.midi(s, mood + ".mid");
 		int key = generateKey(height);
-		Phrase melody = generateMelody(name, key);
-		p.addPhrase(melody);
-		s.addPart(p);
+		
+		Read.midi(s, mood + ".mid");
+		
+		boolean halfTime = false;
+		if (mood.contains("Lovestruck"))
+			halfTime = true;
+		
+		Part melodyPart = new Part("Melody", PIANO, 0);
+		Phrase melody = generateMelody(name, key, halfTime);
+		melodyPart.addPhrase(melody);
+		s.addPart(melodyPart);	
+		
+		for (int i = 0; i < s.getPartList().size(); i++){
+			Part part1 = s.getPart(i);
+			System.out.println(part1.getInstrument());
+			if (part1.getInstrument() == 0){
+				part1.setInstrument(PIANO);
+			}
+		}
+		
+		
+		for (int i = 0; i < s.getPartList().size(); i++){
+			Part part1 = s.getPart(i);
+			for (int j = 0; j < part1.getPhraseList().size(); j++){
+				Phrase phrase1 = part1.getPhrase(j);
+				 for (int k = 0; k < phrase1.getNoteList().size(); k++){
+					 Note note1 = phrase1.getNote(k);			 
+					 if (note1.getPitch() > 0 && note1.getPitch() < 80){
+						 note1.setPitch(note1.getPitch());
+					 }
+				 }
+			}
+		}
 		Play.midi(s);
 	}
 
@@ -57,12 +99,12 @@ public final class Music implements JMC {
 		}
 	}
 
-	public static Phrase generateMelody(String name, int key) {
-		Phrase melody = new Phrase("Melody", 0.0);
-
-		// COUNT IN
+	public static Phrase generateMelody(String name, int key, boolean halfTime) {
+		Phrase melody = new Phrase("Melody", 0.0, PIANO);
+		
+//		// COUNT IN
 //		 for (int i = 0; i < 4; i++){
-//		 Note n = new Note(C4, QUARTER_NOTE);
+//		 Note n = new Note(C4, QUARTER_NOTE, FFF);
 //		 melody.addNote(n);
 //		 }
 
@@ -74,108 +116,160 @@ public final class Music implements JMC {
 			for (int i = 0; i < name.length(); i++) {
 				switch (name.charAt(i)) {
 				case 'a':
-					n = new Note(key, 1.0);
 					note_length = 1;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key, note_length);			
 					break;
-				case 'b':
-					n = new Note(key + 2, 1.0);
+				case 'b':			
 					note_length = 1;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 2, note_length);
 					break;
 				case 'c':
-					n = new Note(key + 4, 1.0);
 					note_length = 1;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 4, note_length);
 					break;
 				case 'd':
-					n = new Note(key + 7, 1.0);
 					note_length = 1;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 7, note_length);
 					break;
 				case 'e':
-					n = new Note(key + 9, 1.0);
 					note_length = 1;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 9, note_length);
 					break;
 				case 'f':
-					n = new Note(key, 0.5);
 					note_length = 0.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key, note_length);
 					break;
 				case 'g':
-					n = new Note(key + 2, 0.5);
 					note_length = 0.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 2, note_length);			
 					break;
 				case 'h':
-					n = new Note(key + 4, 0.5);
 					note_length = 0.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 4, note_length);				
 					break;
 				case 'i':
-					n = new Note(key + 7, 0.5);
 					note_length = 0.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 7, note_length);					
 					break;
 				case 'j':
-					n = new Note(key + 9, 0.5);
 					note_length = 0.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 9, note_length);
 					break;
 				case 'k':
-					n = new Note(key, 0.25);
 					note_length = 0.25;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key, note_length);
 					break;
 				case 'l':
-					n = new Note(key + 2, 0.25);
 					note_length = 0.25;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 2, note_length);				
 					break;
 				case 'm':
-					n = new Note(key + 4, 0.25);
 					note_length = 0.25;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 4, note_length);				
 					break;
 				case 'n':
-					n = new Note(key + 7, 0.25);
 					note_length = 0.25;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 7, note_length);				
 					break;
 				case 'o':
-					n = new Note(key + 9, 0.25);
 					note_length = 0.25;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 9, note_length);	
 					break;
 				case 'p':
-					n = new Note(key, 2.0);
 					note_length = 2;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key, note_length);		
 					break;
 				case 'q':
-					n = new Note(key + 2, 2.0);
 					note_length = 2;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 2, note_length);			
 					break;
 				case 'r':
-					n = new Note(key + 4, 2.0);
 					note_length = 2;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 4, note_length);		
 					break;
 				case 's':
-					n = new Note(key + 7, 2.0);
 					note_length = 2;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 7, note_length);			
 					break;
 				case 't':
-					n = new Note(key + 9, 2.0);
 					note_length = 2;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 9, note_length);				
 					break;
 				case 'u':
-					n = new Note(key, 1.5);
 					note_length = 1.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key, note_length);				
 					break;
 				case 'v':
-					n = new Note(key + 2, 1.5);
 					note_length = 1.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 2, note_length);			
 					break;
 				case 'w':
-					n = new Note(key + 4, 1.5);
 					note_length = 1.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 4, note_length);	
 					break;
 				case 'x':
-					n = new Note(key + 7, 1.5);
 					note_length = 1.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 7, note_length);	
 					break;
 				case 'y':
-					n = new Note(key + 9, 1.5);
 					note_length = 1.5;
+					if (halfTime)
+						note_length *= 2;
+					n = new Note(key + 9, note_length);
 					break;
 				default:
-					n = new Note(key, 1.5);
 					note_length = 1.5;
+					n = new Note(key, 1.5);
+					if (halfTime)
+						note_length *= 2;			
 				}
 				if (note_length + phrase_length < max_length) {
 					phrase_length += note_length;
