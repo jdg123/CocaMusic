@@ -8,4 +8,3 @@ Redirects to Java Hosted webpage that generates a unique song for each user give
 
 Song generator written in JMusic, Java music library. Try the app out at:
 
-https://quiet-sierra-2290.herokuapp.com/
