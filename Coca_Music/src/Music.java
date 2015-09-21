@@ -1,9 +1,5 @@
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequencer;
-
 import jm.JMC;
 import jm.music.data.*;
-import jm.audio.synth.*;
 import jm.util.*;
 
 public final class Music implements JMC {
@@ -24,45 +20,55 @@ public final class Music implements JMC {
 
 	public static Input pullDatabase() {
 		Input input = new Input();				
-		input.height = 61; // height in inches
-		input.mood = "LovestruckNoLead";
-		input.name = "Josh Greenberger";
+		input.height = 75; // height in inches
+		input.mood = "Exhausted";
+		input.name = "Ernie Seinfeld";
 		return input;
 	}
 	
 	public static void generateSong(int height, String mood, String name) {
 
 		Score s = new Score("JMDemo1 - Scale");
-		int key = generateKey(height);
-		
 		Read.midi(s, mood + ".mid");
 		
 		boolean halfTime = false;
-		if (mood.contains("Lovestruck"))
+		if (mood.contains("Lovestruck") || mood.contains("Discouraged") || mood.contains("Smooth"))
 			halfTime = true;
 		
-		Part melodyPart = new Part("Melody", PIANO, 0);
-		Phrase melody = generateMelody(name, key, halfTime);
+		Part melodyPart = new Part("Melody", 0);
+		Phrase melody = generateMelody(name, 60, halfTime);
 		melodyPart.addPhrase(melody);
+		melodyPart.setChannel(s.getPartList().size()+1);
 		s.addPart(melodyPart);	
 		
-		for (int i = 0; i < s.getPartList().size(); i++){
-			Part part1 = s.getPart(i);
-			System.out.println(part1.getInstrument());
-			if (part1.getInstrument() == 0){
-				part1.setInstrument(PIANO);
-			}
-		}
+		//Change the melody instrument based on mood
+		s.getPart(s.getPartList().size()-1).setInstrument(returnMelodyInstrument(mood));
+		
+		//Change the tempo
+		//s.setTempo(s.getTempo() + 50);
 		
 		
+		//Change the key by height
 		for (int i = 0; i < s.getPartList().size(); i++){
 			Part part1 = s.getPart(i);
+			System.out.println("instrument = " + part1.getInstrument() + " part =" + part1.getChannel());
+			//Drum Channel, don't change key
+			if (part1.getChannel() == 9)
+				continue;
+			
 			for (int j = 0; j < part1.getPhraseList().size(); j++){
 				Phrase phrase1 = part1.getPhrase(j);
 				 for (int k = 0; k < phrase1.getNoteList().size(); k++){
-					 Note note1 = phrase1.getNote(k);			 
+					 Note note1 = phrase1.getNote(k);
 					 if (note1.getPitch() > 0 && note1.getPitch() < 80){
-						 note1.setPitch(note1.getPitch());
+						 if (mood.contains("Hopeful"))
+							 note1.setPitch(note1.getPitch() + 12);
+						 if (height % 12 < 6){
+							 note1.setPitch(note1.getPitch() + (height % 12));
+						 }
+						 else {
+							 note1.setPitch(note1.getPitch() - (12 - (height % 12)));
+						 }
 					 }
 				 }
 			}
@@ -70,49 +76,46 @@ public final class Music implements JMC {
 		Play.midi(s);
 	}
 
-	public static int generateKey(int height) {
-		switch (height % 12) {
-		case 1:
-			return 60;
-		case 2:
-			return 61;
-		case 3:
-			return 62;
-		case 4:
-			return 63;
-		case 5:
-			return 64;
-		case 6:
-			return 65;
-		case 7:
-			return 66;
-		case 8:
-			return 67;
-		case 9:
-			return 68;
-		case 10:
-			return 69;
-		case 11:
-			return 70;
-		default:
-			return 71;
-		}
-	}
-
+	public static int returnMelodyInstrument (String mood){
+	    if (mood.contains("Suspicious"))
+	      return jm.constants.ProgramChanges.DGUITAR;
+	    if (mood.contains("Smooth")) 
+	      return jm.constants.ProgramChanges.VIBRAPHONE;
+	    if (mood.contains("Mischievous")) 
+	      return jm.constants.ProgramChanges.DGUITAR;
+	    if (mood.contains("Lovestruck")) 
+	      return jm.constants.ProgramChanges.ELECTRIC_PIANO;
+	    if (mood.contains("Hopeful"))  
+	      return jm.constants.ProgramChanges.FLUTE;
+	    if (mood.contains("Happy")) 
+	      return jm.constants.ProgramChanges.HARP;
+	    if (mood.contains("Exhausted")) 
+	      return jm.constants.ProgramChanges.CLARINET;
+	    if (mood.contains("Epic")) 
+	      return jm.constants.ProgramChanges.OVERDRIVE_GUITAR;
+	    if (mood.contains("Confident"))
+	      return jm.constants.ProgramChanges.SYNTH_STRINGS;
+	    if (mood.contains("Discouraged"))  
+	      return jm.constants.ProgramChanges.CLARINET;
+	    if (mood.contains("Angry")) 
+	      return jm.constants.ProgramChanges.TENOR;
+	    if (mood.contains("Sad"))
+	      return jm.constants.ProgramChanges.ELECTRIC_PIANO;
+	    else
+	      return jm.constants.ProgramChanges.PIANO;   
+	  }
+	
 	public static Phrase generateMelody(String name, int key, boolean halfTime) {
-		Phrase melody = new Phrase("Melody", 0.0, PIANO);
-		
-//		// COUNT IN
-//		 for (int i = 0; i < 4; i++){
-//		 Note n = new Note(C4, QUARTER_NOTE, FFF);
-//		 melody.addNote(n);
-//		 }
-
+		Phrase melody = new Phrase("Melody", 0.0);
 		double phrase_length = 0, max_length = 8, note_length;
+		int songLength = 8;
 		Note n = null;
 		name = name.toLowerCase();
 		// Iterate through letters in name
-		for (int x = 0; x < 8; x++) {
+		for (int x = 0; x < songLength; x++) {
+			//Generate 2 bar phrase
+			phrase_length = 0;
+			while (phrase_length < max_length){
 			for (int i = 0; i < name.length(); i++) {
 				switch (name.charAt(i)) {
 				case 'a':
@@ -274,17 +277,14 @@ public final class Music implements JMC {
 				if (note_length + phrase_length < max_length) {
 					phrase_length += note_length;
 					melody.addNote(n);
-					System.out.println("Char = " + name.charAt(i));
-					System.out.println(phrase_length);
 				} 
 				else {
 					n = new Note(key, max_length - phrase_length);
-					System.out.println("At length "
-							+ (max_length - phrase_length));
-					phrase_length = 0;
+					phrase_length = max_length;
 					melody.addNote(n);
 					i = name.length();
 				}
+			}
 			}
 		}
 		return melody;
